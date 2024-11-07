@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call a Phone from Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        p {
+            text-align: center;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Call a Phone from Website</h1>
+
+    <div class="container">
+        <form id="callForm">
+            <label for="phoneNumber">Enter Phone Number (Include +63 for Philippines):</label>
+            <input type="text" id="phoneNumber" name="phoneNumber" placeholder="+63 912 345 6789" required />
+            <button type="button" onclick="makeCall()">Call Now</button>
+        </form>
+        <p id="responseMessage"></p>
+    </div>
+
+    <script>
+        function makeCall() {
+            var phoneNumber = document.getElementById('phoneNumber').value;
+
+            // Ensure phone number starts with +63 (Philippines)
+            if (!phoneNumber.match(/^\+63\d{9}$/)) {
+                alert('Please enter a valid Philippines phone number starting with +63 (e.g., +63 912 345 6789)');
+                return;
+            }
+
+            fetch(`/call?to=${phoneNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('responseMessage').textContent = `Call initiated successfully!`;
+                    } else {
+                        document.getElementById('responseMessage').textContent = `Error: ${data.message}`;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('responseMessage').textContent = 'Error: ' + error.message;
+                });
+        }
+    </script>
+
+</body>
+</html>
